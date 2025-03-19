@@ -52,6 +52,7 @@
 #include <linux/notifier.h>
 #include <linux/fb.h>
 #endif
+#include <linux/pm_qos.h>
 
 /* macros definition */
 #define GOODIX_CORE_DRIVER_NAME		"goodix_ts"
@@ -92,10 +93,6 @@
 #define GTP_GAME_CMD_ADD  0x6F68
 #define GTP_GAME_CMD      0x0E
 #define GTP_EXIT_GAME_CMD 0x0F
-
-#define CONFIG_TOUCHSCREEN_GOODIX_DEBUG_FS
-
-#define CONFIG_GOODIX_HWINFO
 
 /*
  * struct goodix_module - external modules container
@@ -489,13 +486,7 @@ struct goodix_ts_core {
 	bool tp_already_suspend;
 	bool palm_sensor_switch;
 	struct completion pm_resume_completion;
-#ifdef CONFIG_TOUCHSCREEN_GOODIX_DEBUG_FS
-	struct dentry *debugfs;
-#endif
-#ifdef CONFIG_GOODIX_HWINFO
-	int dbclick_count;
-#endif
-
+	struct pm_qos_request pm_touch_req;
 };
 
 struct goodix_mode_switch {
