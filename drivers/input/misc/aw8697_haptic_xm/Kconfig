@@ -2,7 +2,7 @@
 # Mediatek AW9233 Driver
 #
 
-config AW8697_XM_HAPTIC
+config INPUT_AW8697_XM_HAPTIC
 	tristate "Freescale AW8697 Touchkey"
 	depends on I2C
 	help
