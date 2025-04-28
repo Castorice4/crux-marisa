@@ -34,4 +34,3 @@ void rb_init(void);
 int release_rb(void);
 int get_rb_avalible_size(void);
 #endif
-
