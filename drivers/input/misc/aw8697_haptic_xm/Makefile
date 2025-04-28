@@ -1,2 +1,2 @@
-obj-$(CONFIG_AW8697_XM_HAPTIC)	+= aw8697.o
-obj-$(CONFIG_AW8697_XM_HAPTIC)	+= ringbuffer.o
+obj-$(CONFIG_INPUT_AW8697_XM_HAPTIC)	+= aw8697.o
+obj-$(CONFIG_INPUT_AW8697_XM_HAPTIC)	+= ringbuffer.o
