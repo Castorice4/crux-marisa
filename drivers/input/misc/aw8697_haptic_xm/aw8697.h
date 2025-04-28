@@ -23,42 +23,41 @@
 #include <linux/leds.h>
 #include <linux/atomic.h>
 
-
 /*********************************************************
  *
  * marco
  *
  ********************************************************/
-#define AW8697_CHIPID                   0x97
+#define AW8697_CHIPID 0x97
 
-#define MAX_I2C_BUFFER_SIZE                 65536
+#define MAX_I2C_BUFFER_SIZE 65536
 
-#define AW8697_SEQUENCER_SIZE               8
-#define AW8697_SEQUENCER_LOOP_SIZE          4
+#define AW8697_SEQUENCER_SIZE 8
+#define AW8697_SEQUENCER_LOOP_SIZE 4
 
-#define AW8697_RTP_I2C_SINGLE_MAX_NUM       512
+#define AW8697_RTP_I2C_SINGLE_MAX_NUM 512
 
-#define HAPTIC_MAX_TIMEOUT                  10000
+#define HAPTIC_MAX_TIMEOUT 10000
 
-#define AW8697_VBAT_REFER                   4200
-#define AW8697_VBAT_MIN                     3000
-#define AW8697_VBAT_MAX                     4500
+#define AW8697_VBAT_REFER 4200
+#define AW8697_VBAT_MIN 3000
+#define AW8697_VBAT_MAX 4500
 #define ENABLE_PIN_CONTROL
 
 #ifdef INPUT_DEV
 /* common definitions */
-#define HAP_BRAKE_PATTERN_MAX       4
-#define HAP_WAVEFORM_BUFFER_MAX     8	/*used */
-#define HAP_VMAX_MV_DEFAULT     1800
-#define HAP_VMAX_MV_MAX         3596
-#define HAP_PLAY_RATE_US_DEFAULT    5715	/*used */
-#define HAP_PLAY_RATE_US_MAX        20475
-#define HAP_PLAY_RATE_US_LSB        5
-#define VMAX_MIN_PLAY_TIME_US       20000
-#define HAP_SC_DET_MAX_COUNT        5
-#define HAP_SC_DET_TIME_US      1000000
-#define FF_EFFECT_COUNT_MAX     32
-#define HAP_DISABLE_DELAY_USEC      1000
+#define HAP_BRAKE_PATTERN_MAX 4
+#define HAP_WAVEFORM_BUFFER_MAX 8 /*used */
+#define HAP_VMAX_MV_DEFAULT 1800
+#define HAP_VMAX_MV_MAX 3596
+#define HAP_PLAY_RATE_US_DEFAULT 5715 /*used */
+#define HAP_PLAY_RATE_US_MAX 20475
+#define HAP_PLAY_RATE_US_LSB 5
+#define VMAX_MIN_PLAY_TIME_US 20000
+#define HAP_SC_DET_MAX_COUNT 5
+#define HAP_SC_DET_TIME_US 1000000
+#define FF_EFFECT_COUNT_MAX 32
+#define HAP_DISABLE_DELAY_USEC 1000
 #endif
 /*
  * trig default high level
@@ -90,8 +89,7 @@
 *       1   1              3          1           2
 *  enable   default_level  dual_edge  first_seq   second_seq
 */
-#define AW8697_TRIG_NUM                     3
-
+#define AW8697_TRIG_NUM 3
 
 enum aw8697_flags {
 	AW8697_FLAG_NONR = 0,
@@ -302,7 +300,7 @@ struct qti_hap_config {
 #endif
 
 #ifdef ENABLE_PIN_CONTROL
-const char * const pctl_names[] = {
+const char *const pctl_names[] = {
 	"aw8697_reset_reset",
 	"aw8697_reset_active",
 	"aw8697_interrupt_active",
@@ -382,8 +380,8 @@ struct aw8697 {
 	atomic_t is_in_rtp_loop;
 	atomic_t exit_in_rtp_loop;
 	atomic_t is_in_write_loop;
-	wait_queue_head_t wait_q;//wait queue for exit irq mode
-	wait_queue_head_t stop_wait_q;  //wait queue for stop rtp mode
+	wait_queue_head_t wait_q; //wait queue for exit irq mode
+	wait_queue_head_t stop_wait_q; //wait queue for stop rtp mode
 	struct workqueue_struct *work_queue;
 
 #ifdef INPUT_DEV
@@ -399,7 +397,7 @@ struct aw8697 {
 	struct regulator *vdd_supply;
 	struct hrtimer stop_timer;
 	struct hrtimer hap_disable_timer;
-	struct hrtimer timer;	/*test used  ,del */
+	struct hrtimer timer; /*test used  ,del */
 	struct dentry *hap_debugfs;
 	struct mutex rtp_lock;
 	spinlock_t bus_lock;
@@ -437,28 +435,20 @@ struct aw8697_que_seq {
 	unsigned char index[AW8697_SEQUENCER_SIZE];
 };
 
-#define AW8697_HAPTIC_IOCTL_MAGIC         'h'
+#define AW8697_HAPTIC_IOCTL_MAGIC 'h'
 
-#define AW8697_HAPTIC_SET_QUE_SEQ         _IOWR(AW8697_HAPTIC_IOCTL_MAGIC,\
-						1,\
-						struct aw8697_que_seq*)
-#define AW8697_HAPTIC_SET_SEQ_LOOP        _IOWR(AW8697_HAPTIC_IOCTL_MAGIC,\
-						2,\
-						struct aw8697_seq_loop*)
-#define AW8697_HAPTIC_PLAY_QUE_SEQ        _IOWR(AW8697_HAPTIC_IOCTL_MAGIC,\
-						3,\
-						unsigned int)
-#define AW8697_HAPTIC_SET_BST_VOL         _IOWR(AW8697_HAPTIC_IOCTL_MAGIC,\
-						4,\
-						unsigned int)
-#define AW8697_HAPTIC_SET_BST_PEAK_CUR    _IOWR(AW8697_HAPTIC_IOCTL_MAGIC,\
-						5,\
-						unsigned int)
-#define AW8697_HAPTIC_SET_GAIN            _IOWR(AW8697_HAPTIC_IOCTL_MAGIC,\
-						6,\
-						unsigned int)
-#define AW8697_HAPTIC_PLAY_REPEAT_SEQ     _IOWR(AW8697_HAPTIC_IOCTL_MAGIC,\
-						7,\
-						unsigned int)
+#define AW8697_HAPTIC_SET_QUE_SEQ \
+	_IOWR(AW8697_HAPTIC_IOCTL_MAGIC, 1, struct aw8697_que_seq *)
+#define AW8697_HAPTIC_SET_SEQ_LOOP \
+	_IOWR(AW8697_HAPTIC_IOCTL_MAGIC, 2, struct aw8697_seq_loop *)
+#define AW8697_HAPTIC_PLAY_QUE_SEQ \
+	_IOWR(AW8697_HAPTIC_IOCTL_MAGIC, 3, unsigned int)
+#define AW8697_HAPTIC_SET_BST_VOL \
+	_IOWR(AW8697_HAPTIC_IOCTL_MAGIC, 4, unsigned int)
+#define AW8697_HAPTIC_SET_BST_PEAK_CUR \
+	_IOWR(AW8697_HAPTIC_IOCTL_MAGIC, 5, unsigned int)
+#define AW8697_HAPTIC_SET_GAIN _IOWR(AW8697_HAPTIC_IOCTL_MAGIC, 6, unsigned int)
+#define AW8697_HAPTIC_PLAY_REPEAT_SEQ \
+	_IOWR(AW8697_HAPTIC_IOCTL_MAGIC, 7, unsigned int)
 
 #endif
