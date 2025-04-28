@@ -23,7 +23,7 @@ struct rb {
 	atomic_t wr_index;
 	atomic_t rd_index;
 	atomic_t eof;
-	volatile int32_t aval_size;	// avalibale to write size.
+	volatile int32_t aval_size; // avalibale to write size.
 	atomic_t buf_condition, exit;
 	wait_queue_head_t wait_q;
 };
@@ -55,10 +55,8 @@ int write_rb(const char *data, int32_t size)
 	while ((grb->aval_size < size) && (!atomic_read(&grb->exit))) {
 		pr_debug("%s: no space avaliable", __func__);
 		pr_info("%s:  goint to waiting irq exit\n", __func__);
-		ret =
-		    wait_event_interruptible(grb->wait_q,
-					     atomic_read(&grb->buf_condition) ==
-					     1);
+		ret = wait_event_interruptible(
+			grb->wait_q, atomic_read(&grb->buf_condition) == 1);
 		if (ret == -ERESTARTSYS) {
 			pr_err("%s: wake up by signal return erro\n", __func__);
 			return ret;
@@ -87,9 +85,9 @@ int write_rb(const char *data, int32_t size)
 	}
 	atomic_set(&grb->wr_index, tail);
 	grb->aval_size = get_free_size(tail, head);
-	pr_debug
-	    ("%s: after write %d,  write index %d, read index %d, aval_size %d",
-	     __func__, size, tail, head, grb->aval_size);
+	pr_debug(
+		"%s: after write %d,  write index %d, read index %d, aval_size %d",
+		__func__, size, tail, head, grb->aval_size);
 	return size;
 }
 
@@ -107,7 +105,7 @@ int read_rb(char *data, int32_t size)
 	tail = atomic_read(&grb->wr_index);
 	head = atomic_read(&grb->rd_index);
 	grb->aval_size = get_free_size(tail, head);
-	filled_size = BUFFER_SIZE - 1 - grb->aval_size;	// aready write size.
+	filled_size = BUFFER_SIZE - 1 - grb->aval_size; // aready write size.
 
 	pr_debug("%s: write index %d, read index %d, filled size %d", __func__,
 		 tail, head, filled_size);
@@ -132,9 +130,9 @@ int read_rb(char *data, int32_t size)
 	//add wakeup here
 	atomic_set(&grb->buf_condition, 1);
 	wake_up_interruptible(&grb->wait_q);
-	pr_debug
-	    ("%s: after read %d  write index %d, read index %d, aval_size %d",
-	     __func__, read_bytes, tail, head, grb->aval_size);
+	pr_debug(
+		"%s: after read %d  write index %d, read index %d, aval_size %d",
+		__func__, read_bytes, tail, head, grb->aval_size);
 
 	return atomic_read(&grb->eof) ? read_bytes : size;
 }
@@ -228,4 +226,3 @@ int release_rb(void)
 	}
 	return 0;
 }
-
